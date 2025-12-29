@@ -30,7 +30,6 @@ app.get("/", (req, res) => {
   });
 });
 
-
 app.use("/api/auth", authRoutes); 
 app.use("/api/staf", stafRoutes);
 app.use("/api/sparepart", sparepartRoutes);

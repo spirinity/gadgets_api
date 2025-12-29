@@ -1,22 +1,20 @@
 import express from "express";
 import {
   getAllSparepart,
+  getAllOrderSparepart,
   upsertSparepart,
   editSparepart,
-  hapusSparepart,
-  getStokMenipis,
 } from "../controllers/sparepartController.js";
+import { isAuthenticated, isKasir } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.get("/", getAllSparepart);
+// Viewing allowed for all authenticated staff
+router.get("/", isAuthenticated, getAllSparepart);
+router.get("/orders", isAuthenticated, getAllOrderSparepart); // Riwayat Penggunaan
 
-router.get("/stok-menipis", getStokMenipis);
-
-router.post("/", upsertSparepart);
-
-router.put("/:id", editSparepart);
-
-router.delete("/:id", hapusSparepart);
+// Modification only for Admin
+router.post("/", isAuthenticated, isKasir, upsertSparepart);
+router.put("/:id", isAuthenticated, isKasir, editSparepart);
 
 export default router;

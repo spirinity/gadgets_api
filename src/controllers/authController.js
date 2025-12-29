@@ -1,42 +1,44 @@
 import pool from "../../config/db.js";
+import jwt from "jsonwebtoken";
+
+const SECRET_KEY = process.env.JWT_SECRET || "gadget_service_super_rahasia";
 
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Validasi input
     if (!email || !password) {
-      return res.status(400).json({
-        error: "Email dan password wajib diisi",
-      });
+      return res.status(400).json({ message: "Email dan password wajib diisi" });
     }
 
     const [rows] = await pool.query("CALL LoginStaf(?, ?)", [email, password]);
 
     const result = rows[0][0]; 
 
-    // Cek apakah login berhasil
-    if (result.status === "ERROR") {
-      return res.status(401).json({
-        error: result.message,
+    if (!result || result.status === "ERROR") {
+      return res.status(401).json({ 
+        message: result ? result.message : "Email atau password salah" 
       });
     }
 
-    // Login berhasil
-    res.json({
+    const payload = {
+      id: result.staf_id,
+      nama: result.nama,
+      role: result.role,
+      email: result.email,
+    };
+
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "24h" });
+
+    return res.status(200).json({
       message: "Login berhasil",
-      user: {
-        staf_id: result.staf_id,
-        nama: result.nama,
-        role: result.role,
-        email: result.email,
-      },
+      data: {
+        token,
+        user: payload,
+      }
     });
   } catch (err) {
     console.error("Error login:", err);
-    res.status(500).json({
-      error: "Terjadi kesalahan saat login",
-      details: err.message,
-    });
+    return res.status(500).json({ message: "Terjadi kesalahan saat login" });
   }
 };

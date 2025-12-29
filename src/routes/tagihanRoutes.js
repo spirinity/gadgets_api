@@ -6,17 +6,14 @@ import {
   getAllPembayaran,
   inputPembayaran,
 } from "../controllers/tagihanController.js";
+import { isAuthenticated, isKasir } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.get("/", getAllTagihan);
-
-router.get("/detail", getTagihanDetail);
-
-router.post("/", hitungTagihan);
-
-router.get("/pembayaran", getAllPembayaran);
-
-router.post("/pembayaran", inputPembayaran);
+router.get("/", isAuthenticated, isKasir, getAllTagihan);
+router.get("/detail", isAuthenticated, isKasir, getTagihanDetail);
+router.post("/", isAuthenticated, isKasir, hitungTagihan);
+router.get("/pembayaran", isAuthenticated, isKasir, getAllPembayaran);
+router.post("/pembayaran", isAuthenticated, isKasir, inputPembayaran);
 
 export default router;

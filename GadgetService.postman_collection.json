@@ -1,0 +1,679 @@
+{
+	"info": {
+		"_postman_id": "gadget-service-collection-uuid",
+		"name": "Gadget Service API",
+		"description": "Koleksi API untuk project Gadget Service (MBD). Mendukung JWT Auth dan Role Based Access Control.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Auth (Login)",
+			"item": [
+				{
+					"name": "Login - Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.data && jsonData.data.token) {",
+									"    pm.environment.set(\"token_admin\", jsonData.data.token);",
+									"    pm.environment.set(\"current_token\", jsonData.data.token);",
+									"    console.log(\"Token Admin saved!\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@gadget.com\",\n    \"password\": \"admin123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login - Kasir",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.data && jsonData.data.token) {",
+									"    pm.environment.set(\"token_kasir\", jsonData.data.token);",
+									"    pm.environment.set(\"current_token\", jsonData.data.token);",
+									"    console.log(\"Token Kasir saved!\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"kasir@gadget.com\",\n    \"password\": \"kasir123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login - Teknisi",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.data && jsonData.data.token) {",
+									"    pm.environment.set(\"token_teknisi\", jsonData.data.token);",
+									"    pm.environment.set(\"current_token\", jsonData.data.token);",
+									"    console.log(\"Token Teknisi saved!\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"teknisi@gadget.com\",\n    \"password\": \"teknisi123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2. Staf Management (Admin)",
+			"item": [
+				{
+					"name": "Get All Staf",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/staf",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"staf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tambah Staf",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nama\": \"Siti Kasir\",\n    \"email\": \"kasir@gadget.com\",\n    \"password\": \"kasir123\",\n    \"role\": \"Kasir\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/staf",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"staf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Staf",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nama\": \"Siti Update\",\n    \"role\": \"Kasir\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/staf/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"staf",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Hapus Staf",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"admin_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/staf/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"staf",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3. Inventory Sparepart",
+			"item": [
+				{
+					"name": "Get All Sparepart",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/spareparts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"spareparts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upsert Sparepart (Tambah Stok)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"kode_sku\": \"LCD-S21\",\n    \"nama\": \"LCD Samsung S21 Original\",\n    \"harga_satuan\": 1500000,\n    \"tambah_qty\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/spareparts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"spareparts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Stok Menipis",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/spareparts/stok-menipis?limit=5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"spareparts",
+								"stok-menipis"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4. Order Service (Kasir)",
+			"item": [
+				{
+					"name": "Buka Order Baru",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nama\": \"Budi Santoso\",\n    \"no_hp\": \"081234567890\",\n    \"email\": \"budi@example.com\",\n    \"imei\": \"123456789012345\",\n    \"merek\": \"Samsung\",\n    \"model\": \"Galaxy S21\",\n    \"warna\": \"Hitam\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Order",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/orders/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "5. Diagnosa (Teknisi)",
+			"item": [
+				{
+					"name": "Get All Diagnosa",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/diagnosa",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"diagnosa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Input Diagnosa",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"order_id\": 1,\n    \"diagnosis\": \"LCD Pecah, perlu ganti unit baru\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/diagnosa",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"diagnosa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tambah Sparepart ke Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"order_id\": 1,\n    \"sparepart_id\": 1,\n    \"jumlah\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/diagnosa/sparepart",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"diagnosa",
+								"sparepart"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "6. Estimasi (Teknisi & Kasir)",
+			"item": [
+				{
+					"name": "1. Set Estimasi (Teknisi)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"order_id\": 1,\n    \"biaya_jasa\": 500000,\n    \"biaya_sparepart\": 1500000,\n    \"estimasi_kerja\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/estimasi",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"estimasi"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Approve Estimasi (Kasir)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"order_id\": 1,\n    \"keputusan\": \"approve\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/estimasi/approve",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"estimasi",
+								"approve"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Repair Complete (Teknisi)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"order_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/estimasi/complete",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"estimasi",
+								"complete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "7. Tagihan (Kasir)",
+			"item": [
+				{
+					"name": "Hitung Tagihan",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"order_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tagihan/hitung",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tagihan",
+								"hitung"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Input Pembayaran",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"order_id\": 1,\n    \"jumlah_bayar\": 2000000,\n    \"metode\": \"Transfer\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tagihan/bayar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tagihan",
+								"bayar"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{current_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}

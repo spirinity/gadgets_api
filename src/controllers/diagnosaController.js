@@ -4,24 +4,26 @@ import pool from "../../config/db.js";
 export const getAllDiagnosa = async (req, res) => {
   try {
     const [rows] = await pool.query("CALL GetAllDiagnosa()");
-    res.json(rows[0]);
+    res.status(200).json({
+      message: "Data diagnosa berhasil diambil",
+      data: rows[0]
+    });
   } catch (err) {
     console.error("Error get all diagnosa:", err);
-    res.status(500).json({
-      error: "Gagal mengambil data diagnosa",
-      details: err.message,
-    });
+    res.status(500).json({ message: "Gagal mengambil data diagnosa" });
   }
 };
 
 export const setDiagnosa = async (req, res) => {
   try {
-    const { order_id, teknisi_id, diagnosis } = req.body;
+    const { order_id, diagnosis } = req.body;
+    // Teknisi ID diambil dari token login
+    const teknisi_id = req.user.id;
 
     // Validasi input
-    if (!order_id || !teknisi_id || !diagnosis) {
+    if (!order_id || !diagnosis) {
       return res.status(400).json({
-        error: "order_id, teknisi_id, dan diagnosis wajib diisi",
+        message: "Order ID dan diagnosis wajib diisi",
       });
     }
 
@@ -36,20 +38,52 @@ export const setDiagnosa = async (req, res) => {
 
     res.status(201).json({
       message: "Diagnosa berhasil disimpan",
-      diagnosa_id: output[0].diagnosa_id,
+      data: {
+        diagnosa_id: output[0].diagnosa_id
+      }
     });
   } catch (err) {
     console.error("Error set diagnosa:", err);
 
     if (err.sqlState === "45000") {
       return res.status(400).json({
-        error: err.sqlMessage,
+        message: err.sqlMessage,
       });
     }
 
-    res.status(500).json({
-      error: "Gagal menyimpan diagnosa",
-      details: err.message,
+    res.status(500).json({ message: "Gagal menyimpan diagnosa" });
+  }
+};
+
+export const tambahSparepartKeOrder = async (req, res) => {
+  try {
+    const { order_id, sparepart_id, jumlah, harga_satuan } = req.body;
+
+    // Validasi input
+    if (!order_id || !sparepart_id || !jumlah) {
+      return res.status(400).json({
+        message: "Order ID, sparepart ID, dan jumlah wajib diisi",
+      });
+    }
+
+    // Panggil stored procedure
+    await pool.query("CALL TambahSparepartKeOrder(?, ?, ?, ?)", [
+      order_id,
+      sparepart_id,
+      jumlah,
+      harga_satuan || null,
+    ]);
+
+    res.status(201).json({
+      message: "Sparepart berhasil ditambahkan ke order",
     });
+  } catch (err) {
+    console.error("Error tambah sparepart ke order:", err);
+
+    if (err.sqlState === "45000") {
+      return res.status(400).json({ message: err.sqlMessage });
+    }
+
+    res.status(500).json({ message: "Gagal menambahkan sparepart ke order" });
   }
 };

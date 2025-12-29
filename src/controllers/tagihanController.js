@@ -1,92 +1,85 @@
 import pool from "../../config/db.js";
 
+// === TAGIHAN (BILLING) ===
+
 export const getAllTagihan = async (req, res) => {
   try {
     const [rows] = await pool.query("CALL GetAllTagihan()");
-    res.json(rows[0]);
+    res.status(200).json({
+      message: "Data tagihan berhasil diambil",
+      data: rows[0]
+    });
   } catch (err) {
     console.error("Error get all tagihan:", err);
-    res.status(500).json({
-      error: "Gagal mengambil data tagihan",
-      details: err.message,
-    });
+    res.status(500).json({ message: "Gagal mengambil data tagihan" });
   }
 };
-
 
 export const getTagihanDetail = async (req, res) => {
   try {
-    const [rows] = await pool.query("CALL GetTagihanDetail()");
-    res.json(rows[0]);
+    const { order_id } = req.body; 
+
+    if (!order_id) {
+      return res.status(400).json({ message: "Order ID wajib diisi" });
+    }
+
+    const [rows] = await pool.query("CALL GetTagihanDetail(?)", [order_id]);
+    res.status(200).json({
+      message: "Detail tagihan berhasil diambil",
+      data: rows[0]
+    });
   } catch (err) {
     console.error("Error get tagihan detail:", err);
-    res.status(500).json({
-      error: "Gagal mengambil detail tagihan",
-      details: err.message,
-    });
+    res.status(500).json({ message: "Gagal mengambil detail tagihan" });
   }
 };
-
 
 export const hitungTagihan = async (req, res) => {
   try {
     const { order_id } = req.body;
 
-    // Validasi input
     if (!order_id) {
-      return res.status(400).json({
-        error: "order_id wajib diisi",
-      });
+      return res.status(400).json({ message: "Order ID wajib diisi" });
     }
 
-    // Panggil stored procedure
-    await pool.query("CALL HitungTagihanOrder(?)", [order_id]);
-
-    res.status(201).json({
-      message: "Tagihan berhasil dihitung",
+    const [rows] = await pool.query("CALL HitungTagihanOrder(?)", [order_id]);
+    res.status(200).json({
+      message: "Total tagihan berhasil dihitung",
+      data: rows[0][0]
     });
   } catch (err) {
     console.error("Error hitung tagihan:", err);
-
     if (err.sqlState === "45000") {
-      return res.status(400).json({
-        error: err.sqlMessage,
-      });
+      return res.status(400).json({ message: err.sqlMessage });
     }
-
-    res.status(500).json({
-      error: "Gagal menghitung tagihan",
-      details: err.message,
-    });
+    res.status(500).json({ message: "Gagal menghitung tagihan" });
   }
 };
 
-/**
- * Get All Pembayaran
- * GET /api/pembayaran
- */
+// === PEMBAYARAN (PAYMENT) ===
+
 export const getAllPembayaran = async (req, res) => {
   try {
     const [rows] = await pool.query("CALL GetAllPembayaran()");
-    res.json(rows[0]);
+    res.status(200).json({
+      message: "Data pembayaran berhasil diambil",
+      data: rows[0]
+    });
   } catch (err) {
     console.error("Error get all pembayaran:", err);
-    res.status(500).json({
-      error: "Gagal mengambil data pembayaran",
-      details: err.message,
-    });
+    res.status(500).json({ message: "Gagal mengambil data pembayaran" });
   }
 };
-
 
 export const inputPembayaran = async (req, res) => {
   try {
     const { order_id, jumlah_bayar, metode } = req.body;
+ 
 
     // Validasi input
     if (!order_id || !jumlah_bayar || !metode) {
       return res.status(400).json({
-        error: "order_id, jumlah_bayar, dan metode wajib diisi",
+        message: "Order ID, jumlah bayar, dan metode pembayaran wajib diisi",
       });
     }
 
@@ -97,21 +90,14 @@ export const inputPembayaran = async (req, res) => {
       metode,
     ]);
 
-    res.status(201).json({
-      message: "Pembayaran berhasil dicatat",
-    });
+    res.status(201).json({ message: "Pembayaran berhasil diinput" });
   } catch (err) {
     console.error("Error input pembayaran:", err);
 
     if (err.sqlState === "45000") {
-      return res.status(400).json({
-        error: err.sqlMessage,
-      });
+      return res.status(400).json({ message: err.sqlMessage });
     }
 
-    res.status(500).json({
-      error: "Gagal mencatat pembayaran",
-      details: err.message,
-    });
+    res.status(500).json({ message: "Gagal menginput pembayaran" });
   }
 };
